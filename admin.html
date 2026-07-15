@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>ViajaPro | Administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-body">
+  <div class="login-screen" id="loginScreen">
+    <form class="login-card" id="loginForm">
+      <div class="brand centered">
+        <span class="brand-icon">✈</span>
+        <div><strong>ViajaPro</strong><small>Panel de administración</small></div>
+      </div>
+      <h1>Bienvenido</h1>
+      <p>Ingresa para administrar viajes, precios, asientos y reservas.</p>
+      <div class="field">
+        <label for="adminUser">Usuario</label>
+        <input id="adminUser" value="admin" required />
+      </div>
+      <div class="field">
+        <label for="adminPassword">Contraseña</label>
+        <input id="adminPassword" type="password" value="1234" required />
+      </div>
+      <button class="primary-btn full" type="submit">Ingresar</button>
+      <small class="demo-note">Acceso de prueba: admin / 1234</small>
+    </form>
+  </div>
+
+  <div class="admin-app hidden" id="adminApp">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand admin-brand" href="index.html">
+        <span class="brand-icon">✈</span>
+        <div><strong>ViajaPro</strong><small>Administración</small></div>
+      </a>
+      <nav class="side-nav">
+        <button class="nav-item active" data-view="dashboard">▦ <span>Resumen</span></button>
+        <button class="nav-item" data-view="trips">🚌 <span>Viajes</span></button>
+        <button class="nav-item" data-view="bookings">🎫 <span>Reservas</span></button>
+        <button class="nav-item" data-view="settings">⚙ <span>Ajustes</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="index.html">Ver sitio público</a>
+        <button id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-header">
+        <button class="menu-btn dark-btn" id="sidebarBtn">☰</button>
+        <div>
+          <h2 id="viewTitle">Resumen general</h2>
+          <p id="viewSubtitle">Controla tu operación desde un solo lugar.</p>
+        </div>
+        <div class="admin-user"><span>A</span><div><strong>Administrador</strong><small>Acceso completo</small></div></div>
+      </header>
+
+      <main class="admin-content">
+        <section class="admin-view active" id="dashboardView">
+          <div class="stats-grid">
+            <article class="stat-card"><span class="stat-icon">🚌</span><div><small>Viajes activos</small><strong id="statTrips">0</strong></div></article>
+            <article class="stat-card"><span class="stat-icon">🎫</span><div><small>Reservas totales</small><strong id="statBookings">0</strong></div></article>
+            <article class="stat-card"><span class="stat-icon">💰</span><div><small>Ingresos estimados</small><strong id="statRevenue">$0</strong></div></article>
+            <article class="stat-card"><span class="stat-icon">💺</span><div><small>Asientos vendidos</small><strong id="statSeats">0</strong></div></article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><div><h3>Próximos viajes</h3><p>Resumen de salidas programadas</p></div><button class="secondary-btn small" data-open-trip-form>Nuevo viaje</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Destino</th><th>Fecha</th><th>Precio</th><th>Disponibilidad</th><th>Estado</th></tr></thead><tbody id="dashboardTrips"></tbody></table></div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="tripsView">
+          <div class="view-actions">
+            <div><h3>Gestión de viajes</h3><p>Crea, modifica o elimina salidas.</p></div>
+            <button class="primary-btn" data-open-trip-form>+ Nuevo viaje</button>
+          </div>
+          <div class="panel">
+            <div class="table-wrap"><table><thead><tr><th>Destino</th><th>Origen</th><th>Fecha y hora</th><th>Precio</th><th>Asientos</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tripsTable"></tbody></table></div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="bookingsView">
+          <div class="view-actions"><div><h3>Reservas</h3><p>Consulta pasajeros, asientos y pagos.</p></div><input id="bookingSearch" class="search-input" placeholder="Buscar reserva o pasajero"></div>
+          <div class="panel">
+            <div class="table-wrap"><table><thead><tr><th>Código</th><th>Pasajero</th><th>Destino</th><th>Asientos</th><th>Total</th><th>Fecha</th><th>Estado</th></tr></thead><tbody id="bookingsTable"></tbody></table></div>
+          </div>
+        </section>
+
+        <section class="admin-view" id="settingsView">
+          <div class="panel settings-panel">
+            <div class="panel-head"><div><h3>Ajustes generales</h3><p>Personaliza el nombre y la moneda del sistema.</p></div></div>
+            <form id="settingsForm" class="form-grid">
+              <div class="field"><label for="companyName">Nombre de la empresa</label><input id="companyName" required /></div>
+              <div class="field"><label for="currency">Moneda</label><select id="currency"><option value="CLP">Peso chileno (CLP)</option><option value="ARS">Peso argentino (ARS)</option><option value="USD">Dólar (USD)</option><option value="BRL">Real brasileño (BRL)</option></select></div>
+              <div class="field"><label for="contactPhone">Teléfono de contacto</label><input id="contactPhone" /></div>
+              <div class="field"><label for="contactEmail">Correo de contacto</label><input id="contactEmail" type="email" /></div>
+              <button class="primary-btn" type="submit">Guardar ajustes</button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="tripModal">
+    <div class="modal-backdrop" data-close-trip-modal></div>
+    <div class="modal-panel compact">
+      <button class="close-btn" data-close-trip-modal>×</button>
+      <h2 id="tripModalTitle">Nuevo viaje</h2>
+      <p class="muted">Completa los datos principales de la salida.</p>
+      <form id="tripForm">
+        <input type="hidden" id="tripId" />
+        <div class="form-grid">
+          <div class="field"><label for="tripDestination">Destino</label><input id="tripDestination" required /></div>
+          <div class="field"><label for="tripOrigin">Origen</label><input id="tripOrigin" required /></div>
+          <div class="field"><label for="tripDate">Fecha</label><input id="tripDate" type="date" required /></div>
+          <div class="field"><label for="tripTime">Hora</label><input id="tripTime" type="time" required /></div>
+          <div class="field"><label for="tripPrice">Valor por persona</label><input id="tripPrice" type="number" min="0" required /></div>
+          <div class="field"><label for="tripSeats">Cantidad de asientos</label><input id="tripSeats" type="number" min="1" max="80" required /></div>
+          <div class="field full-field"><label for="tripImage">URL de imagen</label><input id="tripImage" placeholder="https://..." /></div>
+          <div class="field full-field"><label for="tripDescription">Descripción</label><textarea id="tripDescription" rows="3"></textarea></div>
+          <div class="field"><label for="tripStatus">Estado</label><select id="tripStatus"><option value="Activo">Activo</option><option value="Pausado">Pausado</option><option value="Finalizado">Finalizado</option></select></div>
+        </div>
+        <button class="primary-btn full" type="submit">Guardar viaje</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <script src="admin.js"></script>
+</body>
+</html>
