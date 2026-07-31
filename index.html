@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>ViajaPro | Viajes y eventos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="brand-icon">✈</span><div><strong>ViajaPro</strong><small>Viajes y eventos</small></div></a>
+    <nav><a href="#viajes">Viajes</a><a href="#eventos">Eventos</a><a href="#reservas">Mis compras</a></nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="eyebrow">Compra fácil, rápida y segura</span>
+        <h1>Viajes y eventos en un solo lugar</h1>
+        <p>Elige tu salida o entrada, selecciona el medio de pago y recibe tu comprobante con código QR.</p>
+      </div>
+    </section>
+
+    <section class="section" id="viajes">
+      <div class="section-heading"><div><span class="eyebrow dark">Próximas salidas</span><h2>Viajes disponibles</h2></div><span class="trip-count" id="tripCount">0 viajes</span></div>
+      <div class="trip-grid" id="tripGrid"></div>
+      <div class="empty-state hidden" id="emptyTrips"><div class="empty-icon">🧳</div><h3>No hay viajes disponibles</h3><p>Pronto se publicarán nuevas salidas.</p></div>
+    </section>
+
+    <section class="section soft-bg" id="eventos">
+      <div class="section-heading"><div><span class="eyebrow dark">Panoramas</span><h2>Eventos disponibles</h2></div><span class="trip-count" id="eventCount">0 eventos</span></div>
+      <div class="trip-grid" id="eventGrid"></div>
+      <div class="empty-state hidden" id="emptyEvents"><div class="empty-icon">🎟️</div><h3>No hay eventos disponibles</h3><p>Pronto se publicarán nuevos eventos.</p></div>
+    </section>
+
+    <section class="section" id="reservas">
+      <div class="section-heading"><div><span class="eyebrow dark">Consulta rápida</span><h2>Buscar mi compra</h2></div></div>
+      <div class="lookup-card"><div class="field"><label for="bookingCode">Código de compra</label><input id="bookingCode" type="text" placeholder="Ej: VP-123456" /></div><button class="secondary-btn" id="lookupBtn">Consultar</button></div>
+      <div id="bookingResult"></div>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="purchaseModal">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="close-btn" data-close-modal>×</button>
+      <div id="modalItemSummary"></div>
+      <form id="purchaseForm">
+        <h3>Datos del comprador</h3>
+        <div class="form-grid">
+          <div class="field"><label for="buyerName">Nombre completo</label><input id="buyerName" required /></div>
+          <div class="field"><label for="buyerId">RUT / Documento</label><input id="buyerId" required /></div>
+          <div class="field"><label for="buyerPhone">Teléfono</label><input id="buyerPhone" type="tel" required /></div>
+          <div class="field"><label for="buyerEmail">Correo electrónico</label><input id="buyerEmail" type="email" required /></div>
+        </div>
+
+        <div id="seatSection">
+          <h3>Selecciona tus asientos</h3><p class="muted">Puedes elegir uno o varios asientos disponibles.</p>
+          <div class="seat-legend"><span><i class="seat available"></i> Disponible</span><span><i class="seat selected"></i> Seleccionado</span><span><i class="seat occupied"></i> Ocupado</span></div>
+          <div class="bus"><div class="driver">Conductor</div><div class="seat-map" id="seatMap"></div></div>
+        </div>
+
+        <div id="ticketSection" class="hidden">
+          <h3>Cantidad de entradas</h3>
+          <div class="quantity-control"><button type="button" id="qtyMinus">−</button><strong id="ticketQty">1</strong><button type="button" id="qtyPlus">+</button></div>
+          <p class="muted" id="ticketAvailability"></p>
+        </div>
+
+        <section id="attendeesSection" class="attendees-section hidden">
+          <h3 id="attendeesTitle">Datos de pasajeros</h3>
+          <p class="muted" id="attendeesHelp">Registra a cada persona para vincularla con su asiento o entrada.</p>
+          <div id="attendeesFields"></div>
+        </section>
+
+        <h3>Medio de pago</h3>
+        <div class="payment-options" id="paymentOptions"></div>
+        <div class="payment-note" id="paymentNote"></div>
+
+        <div class="booking-total"><div><span id="quantityLabel">Asientos</span><strong id="selectedLabel">Ninguno</strong></div><div><span>Total</span><strong id="purchaseTotal">$0</strong></div></div>
+        <button type="submit" class="primary-btn full">Pagar y generar QR</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="successModal">
+    <div class="modal-backdrop" data-close-success></div>
+    <div class="modal-panel compact success-panel">
+      <button class="close-btn" data-close-success>×</button>
+      <div class="success-icon">✓</div><h2>Compra registrada</h2><p id="successText" class="muted"></p>
+      <div id="successQr" class="qr-box"></div>
+      <div class="receipt-actions"><button class="secondary-btn" id="downloadQrBtn">Descargar QR</button><button class="primary-btn" id="emailReceiptBtn">Reenviar comprobante</button><button class="secondary-btn" id="contactAdminBtn">Contactar al administrador</button></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+  <footer><div><strong>ViajaPro</strong><p>Sistema profesional de viajes, eventos y entradas QR.</p></div><div id="publicContact"></div></footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
